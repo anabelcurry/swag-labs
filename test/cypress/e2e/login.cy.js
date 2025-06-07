@@ -5,18 +5,9 @@ beforeEach(() => {
 cy.visit('https://www.saucedemo.com/')
 })
 
-describe('Successful Login', () => {
-    it('Logs in user', () => {
-        // Logs user in
-        cy.getByTestID('username')
-            .should('have.attr', 'placeholder', 'Username')
-            .type('standard_user');
-        
-        cy.getByTestID('password')
-            .should('have.attr', 'placeholder', 'Password')
-            .type('secret_sauce');
-
-        cy.getByTestID('login-button').should('be.visible').contains('Login').click();
+describe('Login flow', () => {
+    it('Successful login', () => {
+        cy.login('standard_user', 'secret_sauce');
 
         // Verifies logged in homepage
         cy.getByTestID('header-container').should('be.visible').contains('Swag Labs');
@@ -27,6 +18,14 @@ describe('Successful Login', () => {
             cy.getByTestID('product-sort-container').should('be.visible');
         });
         cy.getByTestID('inventory-container').should('be.visible');
+    });
 
-    })
+    it('Failed login', () => {  // Logs user in
+        cy.login('locked_out_user', 'secret_sauce');
+
+        // Verifies login errors
+        cy.getByTestID('error').should('be.visible').contains('Epic sadface: Sorry, this user has been locked out.');
+        cy.getByTestID('error-button').should('be.visible').click();
+        cy.getByTestID('error').should('not.exist');
+    });
   })
