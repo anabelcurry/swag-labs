@@ -2,7 +2,7 @@ import { addCommands } from '../support/commands';
 addCommands();
 
 beforeEach(() => {
-    cy.visit('https://www.saucedemo.com/')
+    cy.visit('https://www.saucedemo.com/');
     cy.login('standard_user', 'secret_sauce');
 })
 

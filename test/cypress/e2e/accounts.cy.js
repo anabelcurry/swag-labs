@@ -2,11 +2,11 @@ import { addCommands } from '../support/commands';
 addCommands();
 
 beforeEach(() => {
-cy.visit('https://www.saucedemo.com/')
+cy.visit('https://www.saucedemo.com/');
 })
 
-describe('Login flow', () => {
-    it('Successful login', () => {
+describe('Login/logout flow', () => {
+    it('Successful login and logout', () => {
         cy.login('standard_user', 'secret_sauce');
 
         // Verifies logged in homepage
@@ -18,6 +18,18 @@ describe('Login flow', () => {
             cy.getByTestID('product-sort-container').should('be.visible');
         });
         cy.getByTestID('inventory-container').should('be.visible');
+
+        cy.logout();
+        cy.getByTestID('login-container').should('be.visible').within(() => {
+            cy.getByTestID('login-button').should('be.visible').contains('Login').click();
+            cy.getByTestID('username')
+            .should('be.visible')
+            .should('have.attr', 'placeholder', 'Username');
+            cy.getByTestID('password')
+            .should('be.visible')
+            .should('have.attr', 'placeholder', 'Password');
+        });
+
     });
 
     it('Failed login', () => {  // Logs user in
